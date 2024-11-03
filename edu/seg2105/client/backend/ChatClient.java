@@ -93,5 +93,23 @@ public class ChatClient extends AbstractClient
     catch(IOException e) {}
     System.exit(0);
   }
+  
+  
+  /*
+   * Method informs the client that the server has shut down, then terminates the client.
+   */
+  protected void connectionClosed() {
+	  System.out.println("Server has shut down, client terminating.");
+	  quit();
+	}
+  
+  
+  /*
+   * Method informs the client that the server has run into an issue, then terminates the client. 
+   */
+  protected void connectionException(Exception exception) {
+	  System.out.println("Server has run into a connection error: " + exception.getMessage());
+	  quit();
+	}
 }
 //End of ChatClient class
