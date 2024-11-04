@@ -98,7 +98,7 @@ public class ChatClient extends AbstractClient
   private void handleCommand(String command) {
 	  try { 
 		  if (command.equals("#quit")) { // will i need to remove spaces?
-				quit();
+				System.exit(0);
 			} else if (command.equals("#logoff")) {
 				closeConnection();
 				

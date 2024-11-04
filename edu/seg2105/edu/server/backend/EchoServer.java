@@ -29,6 +29,11 @@ public class EchoServer extends AbstractServer
    */
   private ChatIF serverUI; 
   
+  //Instance variables ***********************************************
+  private int numMessagesFromClient = 0;
+  
+  private String loginKey;
+  
   //Constructors ****************************************************
   
   /**
@@ -40,6 +45,7 @@ public class EchoServer extends AbstractServer
   {
     super(port);
     this.serverUI = serverUI;
+  
   }
 
   
@@ -52,18 +58,29 @@ public class EchoServer extends AbstractServer
    * @param client The connection from which the message originated.
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient client){
-	  serverUI.display("Message received: " + msg + " from " + client);
+	  serverUI.display("Message received: " + msg + " from " + client.getInfo("loginID"));
 	  String message = (String) msg;
 	  if (message.startsWith("#login")) { // adds loginID to hashmap
-		  String[] msgSplit = message.split(" ");
-		  String loginID = msgSplit[1];
-		  client.setInfo("loginID", loginID);
+		  if (numMessagesFromClient == 0 ) {
+			  String[] msgSplit = message.split(" ");
+			  loginKey= msgSplit[1];
+			  client.setInfo("loginID", loginKey);
+			  System.out.println(client.getInfo("loginID") + " has logged in!");
+		  } else { // not the first message sent 
+			  try {
+				client.close();
+			} catch (IOException e) {
+				serverUI.display("IOException.");
+				e.printStackTrace();
+			}
+		  }
 		  
 	  } else { // sends to all clients with ID in front 
 		  Object clientID = client.getInfo("loginID");
 		  String idAndMsg = (String) clientID +": " + (String) msg;
 		  this.sendToAllClients(idAndMsg);
 	  }
+	  numMessagesFromClient++;
 	  
 	  
   }
@@ -126,7 +143,7 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    serverUI.display
+    System.out.println
       ("Server listening for connections on port " + getPort());
   }
   
@@ -136,19 +153,20 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
-	  serverUI.display
+	  System.out.println
       ("Server has stopped listening for connections.");
   }
   
   @Override
   protected void clientConnected(ConnectionToClient client) {
-	  serverUI.display("Client has connected!");
+	  System.out.println("New client has connected.");
   }
   
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-	  serverUI.display("Client has disconnected. ");
+	  System.out.println(client.getInfo("loginID")+ " has disconnected. ");
   }
+  
   
 }
 //End of EchoServer class

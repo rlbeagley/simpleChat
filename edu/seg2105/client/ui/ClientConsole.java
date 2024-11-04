@@ -130,8 +130,9 @@ public class ClientConsole implements ChatIF
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-    	if (args.length == 0) { // No ID specified, default values for everything else 
-    		System.exit(0);
+    	if (args.length == 0) { // No ID specified, default values for everything else
+    		System.out.println("Error, no loginID specified");
+    		System.exit(1);
     	} else {
     		host = "localhost";
     		port = DEFAULT_PORT;
