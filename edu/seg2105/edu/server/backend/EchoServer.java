@@ -87,7 +87,11 @@ public class EchoServer extends AbstractServer
 				String[] msgSplit = command.split(" ");
 				setPort(Integer.parseInt(msgSplit[1]));
 		  } else if (command.equals("#start")) {
-				
+				if (isListening()) {
+					serverUI.display("Already started the server.");
+				} else {
+					listen();
+				}
 		  } else if (command.equals("#getport")) {
 				serverUI.display(Integer.toString(getPort()));
 		  } else {
