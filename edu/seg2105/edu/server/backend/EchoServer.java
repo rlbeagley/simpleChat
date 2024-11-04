@@ -52,8 +52,20 @@ public class EchoServer extends AbstractServer
    * @param client The connection from which the message originated.
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient client){
-	  System.out.println("Message received: " + msg + " from " + client);
-	  this.sendToAllClients(msg);
+	  serverUI.display("Message received: " + msg + " from " + client);
+	  String message = (String) msg;
+	  if (message.startsWith("#login")) { // adds loginID to hashmap
+		  String[] msgSplit = message.split(" ");
+		  String loginID = msgSplit[1];
+		  client.setInfo("loginID", loginID);
+		  
+	  } else { // sends to all clients with ID in front 
+		  Object clientID = client.getInfo("loginID");
+		  String idAndMsg = (String) clientID +": " + (String) msg;
+		  this.sendToAllClients(idAndMsg);
+	  }
+	  
+	  
   }
   
   /**
@@ -114,7 +126,7 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStarted()
   {
-    System.out.println
+    serverUI.display
       ("Server listening for connections on port " + getPort());
   }
   
@@ -124,18 +136,18 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
-    System.out.println
+	  serverUI.display
       ("Server has stopped listening for connections.");
   }
   
   @Override
   protected void clientConnected(ConnectionToClient client) {
-	  System.out.println("Client has connected!");
+	  serverUI.display("Client has connected!");
   }
   
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-	  System.out.println("Client has disconnected. ");
+	  serverUI.display("Client has disconnected. ");
   }
   
 }
