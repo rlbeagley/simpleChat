@@ -67,11 +67,14 @@ public class ChatClient extends AbstractClient
    *
    * @param message The message from the UI.    
    */
-  public void handleMessageFromClientUI(String message)
-  {
+  public void handleMessageFromClientUI(String message){
     try
     {
-      sendToServer(message);
+    	if (message.startsWith("#")) {
+    		handleCommand(message);
+    	} else {
+    		sendToServer(message);
+    	}
     }
     catch(IOException e)
     {
@@ -81,6 +84,44 @@ public class ChatClient extends AbstractClient
     }
   }
   
+  /*
+   * If message from client UI starts with #, method handles it depending on the command.
+   */
+  private void handleCommand(String command) {
+	  try { 
+		  if (command.equals("#quit")) { // will i need to remove spaces?
+				quit();
+			} else if (command.equals("#logoff")) {
+				closeConnection();
+				
+			} else if (command.contains("#sethost")) {
+				String[] msgSplit = command.split(" ");
+				setHost(msgSplit[1]);
+			} else if (command.contains("#setport")) {
+				String[] msgSplit = command.split(" ");
+				setPort(Integer.parseInt(msgSplit[1]));
+			} else if (command.equals("#login")) {
+				if (isConnected()) {
+					clientUI.display("You are already connected. Cannot connect again.");
+				} else {
+					openConnection();
+				}
+			} else if (command.equals("#gethost")) {
+				clientUI.display(getHost());
+			} else if (command.equals("#getport")) {
+				clientUI.display(Integer.toString(getPort()));
+			} else {
+				clientUI.display("Invalid command.");
+			}
+		 
+	  } catch (IOException e) {
+		  clientUI.display("IOException");
+		  e.printStackTrace();
+	  } catch (IndexOutOfBoundsException e) {
+		  clientUI.display("IndexOutOfBoundsException");
+		  e.printStackTrace();
+	  }
+  }
   /**
    * This method terminates the client.
    */

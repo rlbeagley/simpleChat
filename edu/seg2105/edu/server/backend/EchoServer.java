@@ -47,12 +47,12 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
-  public void handleMessageFromClient
-    (Object msg, ConnectionToClient client)
-  {
-    System.out.println("Message received: " + msg + " from " + client);
+  public void handleMessageFromClient(Object msg, ConnectionToClient client){
+	  System.out.println("Message received: " + msg + " from " + client);
+	  this.sendToAllClients(msg);
+  }
    
-    String message = (String) msg;
+    /*String message = (String) msg;
     if (message.startsWith("#")) {
     	
     	try {
@@ -62,17 +62,18 @@ public class EchoServer extends AbstractServer
     			client.close();
     		} else if (message.contains("#sethost")) {
     			String[] msgSplit = message.split(" ");
-    			
-    		}
+    		} else if ()
+    		else {
+    			System.out.println("Command does not exist.");    		}
     		
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
     } else {
     	this.sendToAllClients(msg);
-    }
+    }*/
     
-  }
+
     
   /**
    * This method overrides the one in the superclass.  Called
