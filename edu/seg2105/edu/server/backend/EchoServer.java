@@ -6,6 +6,7 @@ package edu.seg2105.edu.server.backend;
 
 import java.io.IOException;
 
+import edu.seg2105.client.common.ChatIF;
 import ocsf.server.*;
 
 /**
@@ -21,10 +22,12 @@ public class EchoServer extends AbstractServer
 {
   //Class variables *************************************************
   
+  
   /**
-   * The default port to listen on.
+   * The interface type variable.  It allows the implementation of 
+   * the display method in the client.
    */
-  final public static int DEFAULT_PORT = 5555;
+  private ChatIF serverUI; 
   
   //Constructors ****************************************************
   
@@ -33,9 +36,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI) 
   {
     super(port);
+    this.serverUI = serverUI;
   }
 
   
@@ -51,28 +55,61 @@ public class EchoServer extends AbstractServer
 	  System.out.println("Message received: " + msg + " from " + client);
 	  this.sendToAllClients(msg);
   }
-   
-    /*String message = (String) msg;
+  
+  /**
+   * This method handles all data coming from the UI            
+   *
+   * @param message The message from the UI.    
+   */
+  public void handleMessageFromServerUI(String message){
     if (message.startsWith("#")) {
-    	
-    	try {
-    		if (message.equals("#quit")) { // will i need to remove spaces?
-    			this.close();
-    		} else if (message.equals("#logoff")) {
-    			client.close();
-    		} else if (message.contains("#sethost")) {
-    			String[] msgSplit = message.split(" ");
-    		} else if ()
-    		else {
-    			System.out.println("Command does not exist.");    		}
-    		
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-    } else {
-    	this.sendToAllClients(msg);
-    }*/
-    
+		handleCommand(message);
+	} else {
+		this.sendToAllClients(message);
+	}
+  }
+  
+  /*
+   * If message from server UI starts with #, method handles it depending on the command.
+   * 
+   * @param command specifies the type of command to be run.
+   */
+  private void handleCommand(String command) {
+	  /*
+	  try { 
+		  if (command.equals("#quit")) { // will i need to remove spaces?
+				quit();
+			} else if (command.equals("#logoff")) {
+				closeConnection();
+				
+			} else if (command.contains("#sethost")) {
+				String[] msgSplit = command.split(" ");
+				setHost(msgSplit[1]);
+			} else if (command.contains("#setport")) {
+				String[] msgSplit = command.split(" ");
+				setPort(Integer.parseInt(msgSplit[1]));
+			} else if (command.equals("#login")) {
+				if (isConnected()) {
+					clientUI.display("You are already connected. Cannot connect again.");
+				} else {
+					openConnection();
+				}
+			} else if (command.equals("#gethost")) {
+				clientUI.display(getHost());
+			} else if (command.equals("#getport")) {
+				clientUI.display(Integer.toString(getPort()));
+			} else {
+				clientUI.display("Invalid command.");
+			}
+		 
+	  } catch (IOException e) {
+		  clientUI.display("IOException");
+		  e.printStackTrace();
+	  } catch (IndexOutOfBoundsException e) {
+		  clientUI.display("IndexOutOfBoundsException");
+		  e.printStackTrace();
+	  }*/
+  }
 
     
   /**
@@ -105,39 +142,5 @@ public class EchoServer extends AbstractServer
 	  System.out.println("Client has disconnected. ");
   }
   
-  
-  //Class methods ***************************************************
-  
-  /**
-   * This method is responsible for the creation of 
-   * the server instance (there is no UI in this phase).
-   *
-   * @param args[0] The port number to listen on.  Defaults to 5555 
-   *          if no argument is entered.
-   */
-  public static void main(String[] args) 
-  {
-    int port = 0; //Port to listen on
-
-    try
-    {
-      port = Integer.parseInt(args[0]); //Get port from command line
-    }
-    catch(Throwable t)
-    {
-      port = DEFAULT_PORT; //Set port to 5555
-    }
-	
-    EchoServer sv = new EchoServer(port);
-    
-    try 
-    {
-      sv.listen(); //Start listening for connections
-    } 
-    catch (Exception ex) 
-    {
-      System.out.println("ERROR - Could not listen for clients!");
-    }
-  }
 }
 //End of EchoServer class

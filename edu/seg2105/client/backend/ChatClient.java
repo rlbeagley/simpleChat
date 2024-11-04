@@ -86,6 +86,8 @@ public class ChatClient extends AbstractClient
   
   /*
    * If message from client UI starts with #, method handles it depending on the command.
+   * 
+   * @param command specifies the type of command to be run.
    */
   private void handleCommand(String command) {
 	  try { 
