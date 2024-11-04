@@ -118,17 +118,27 @@ public class ClientConsole implements ChatIF
   public static void main(String[] args) 
   {
     String host = "";
+    int port = -1;
 
 
     try
     {
       host = args[0];
+      port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-      host = "localhost";
+    
+      
+      if (args.length < 1) { // neither specified
+    	  host = "localhost";
+    	  port = DEFAULT_PORT; 
+      } else if (args.length < 2) { // only host specified?
+    	  host = args[0];
+    	  port = DEFAULT_PORT;
+      }
     }
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
   }
 }
