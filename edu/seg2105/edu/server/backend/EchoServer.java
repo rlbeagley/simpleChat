@@ -4,6 +4,8 @@ package edu.seg2105.edu.server.backend;
 // license found at www.lloseng.com 
 
 
+import java.io.IOException;
+
 import ocsf.server.*;
 
 /**
@@ -49,7 +51,27 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
+   
+    String message = (String) msg;
+    if (message.startsWith("#")) {
+    	
+    	try {
+    		if (message.equals("#quit")) { // will i need to remove spaces?
+    			this.close();
+    		} else if (message.equals("#logoff")) {
+    			client.close();
+    		} else if (message.contains("#sethost")) {
+    			String[] msgSplit = message.split(" ");
+    			
+    		}
+    		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    } else {
+    	this.sendToAllClients(msg);
+    }
+    
   }
     
   /**
@@ -72,10 +94,12 @@ public class EchoServer extends AbstractServer
       ("Server has stopped listening for connections.");
   }
   
+  @Override
   protected void clientConnected(ConnectionToClient client) {
 	  System.out.println("Client has connected!");
   }
   
+  @Override
   synchronized protected void clientDisconnected(ConnectionToClient client) {
 	  System.out.println("Client has disconnected. ");
   }

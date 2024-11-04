@@ -121,22 +121,16 @@ public class ClientConsole implements ChatIF
     int port = -1;
 
 
-    try
-    {
+    try{
       host = args[0];
       port = Integer.parseInt(args[1]);
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
-    
-      
-      if (args.length < 1) { // neither specified
-    	  host = "localhost";
-    	  port = DEFAULT_PORT; 
-      } else if (args.length < 2) { // only host specified?
-    	  host = args[0];
-    	  port = DEFAULT_PORT;
-      }
+    	host = "localhost";
+    	port = DEFAULT_PORT;
+    } catch (NumberFormatException e) {
+    	port = DEFAULT_PORT;
     }
     ClientConsole chat= new ClientConsole(host, port);
     chat.accept();  //Wait for console data
