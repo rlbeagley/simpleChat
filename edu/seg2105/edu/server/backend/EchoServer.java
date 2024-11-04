@@ -75,40 +75,32 @@ public class EchoServer extends AbstractServer
    * @param command specifies the type of command to be run.
    */
   private void handleCommand(String command) {
-	  /*
+	
 	  try { 
-		  if (command.equals("#quit")) { // will i need to remove spaces?
-				quit();
-			} else if (command.equals("#logoff")) {
-				closeConnection();
-				
-			} else if (command.contains("#sethost")) {
-				String[] msgSplit = command.split(" ");
-				setHost(msgSplit[1]);
-			} else if (command.contains("#setport")) {
+		  if (command.equals("#quit")) { 
+				System.exit(0);
+		  } else if (command.equals("#stop")) {
+				stopListening();
+		  } else if (command.equals("#close")) {
+				close();
+		  } else if (command.contains("#setport")) {
 				String[] msgSplit = command.split(" ");
 				setPort(Integer.parseInt(msgSplit[1]));
-			} else if (command.equals("#login")) {
-				if (isConnected()) {
-					clientUI.display("You are already connected. Cannot connect again.");
-				} else {
-					openConnection();
-				}
-			} else if (command.equals("#gethost")) {
-				clientUI.display(getHost());
-			} else if (command.equals("#getport")) {
-				clientUI.display(Integer.toString(getPort()));
-			} else {
-				clientUI.display("Invalid command.");
+		  } else if (command.equals("#start")) {
+				
+		  } else if (command.equals("#getport")) {
+				serverUI.display(Integer.toString(getPort()));
+		  } else {
+				serverUI.display("Invalid command.");
 			}
 		 
-	  } catch (IOException e) {
-		  clientUI.display("IOException");
-		  e.printStackTrace();
 	  } catch (IndexOutOfBoundsException e) {
-		  clientUI.display("IndexOutOfBoundsException");
+		  serverUI.display("IndexOutOfBoundsException, enter port value after #setport");
 		  e.printStackTrace();
-	  }*/
+	  } catch (IOException e) {
+		  serverUI.display("IOException");
+		  e.printStackTrace();
+	  }
   }
 
     
