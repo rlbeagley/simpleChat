@@ -167,11 +167,11 @@ public class EchoServer extends AbstractServer
 	  System.out.println(client.getInfo("loginID")+ " has disconnected. ");
   }
   
-  @Override
-  synchronized protected void clientException(
+
+  /*synchronized protected void clientException(
 			ConnectionToClient client, Throwable exception) {
 	  System.out.println(client.getInfo("loginID") + "caused this issue: " + exception.getMessage());
-  }
+  }*/
   
 }
 //End of EchoServer class
