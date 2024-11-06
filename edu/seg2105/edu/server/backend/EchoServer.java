@@ -30,7 +30,6 @@ public class EchoServer extends AbstractServer
   private ChatIF serverUI; 
   
   //Instance variables ***********************************************
-  private int numMessagesFromClient = 0;
   
   private String loginKey;
   
@@ -59,11 +58,14 @@ public class EchoServer extends AbstractServer
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient client){
 	  serverUI.display("Message received: " + msg + " from " + client.getInfo("loginID"));
+	
+	  
 	  String message = (String) msg;
 	  if (message.startsWith("#login")) { // adds loginID to hashmap
-		  if (numMessagesFromClient == 0 ) {
+		  if (client.getInfo("loginID") == null) { // first time logging in 
 			  String[] msgSplit = message.split(" ");
 			  loginKey= msgSplit[1];
+			  
 			  client.setInfo("loginID", loginKey);
 			  System.out.println(client.getInfo("loginID") + " has logged in!");
 		  } else { // not the first message sent 
@@ -80,9 +82,7 @@ public class EchoServer extends AbstractServer
 		  String idAndMsg = (String) clientID +": " + (String) msg;
 		  this.sendToAllClients(idAndMsg);
 	  }
-	  numMessagesFromClient++;
-	  
-	  
+ 
   }
   
   /**
@@ -167,6 +167,11 @@ public class EchoServer extends AbstractServer
 	  System.out.println(client.getInfo("loginID")+ " has disconnected. ");
   }
   
+  @Override
+  synchronized protected void clientException(
+			ConnectionToClient client, Throwable exception) {
+	  System.out.println(client.getInfo("loginID") + "caused this issue: " + exception.getMessage());
+  }
   
 }
 //End of EchoServer class

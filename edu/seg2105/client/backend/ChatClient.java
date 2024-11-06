@@ -171,7 +171,7 @@ public class ChatClient extends AbstractClient
    */
   @Override
   protected void connectionException(Exception exception) {
-	  clientUI.display("Server has unexpectedly shut down due to an error.");
+	  clientUI.display("Server has unexpectedly shut down due to an error." );
 	  System.exit(0);
 	}
 }
